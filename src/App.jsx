@@ -7,16 +7,16 @@ function App() {
   let inferRunning;
   var model;
 
-  const initialiseRoboflow = () => {
+  const startInfer = () => {
     inferRunning = true;
     window.roboflow
       .auth({
-        publishable_key:
-          process.env.PUBLISHABLE_ROBOFLOW_API_KEY,
+        publishable_key: import.meta.env
+          .VITE_PUBLISHABLE_ROBOFLOW_API_KEY,
       })
       .load({
-        model: process.env.MODEL_ID,
-        version: process.env.MODEL_VERSION,
+        model: import.meta.env.VITE_MODEL_ID,
+        version: import.meta.env.VITE_MODEL_VERSION,
         onMetadata: function (m) {
           console.log("model loaded");
         },
@@ -28,7 +28,26 @@ function App() {
       });
   };
 
-  useEffect(initialiseRoboflow, []);
+  // roboflow
+  //   .auth({
+  //     // publishable_key: import.meta.env
+  //     //   .VITE_PUBLISHABLE_ROBOFLOW_API_KEY,
+  //     publishable_key: "FlWb1hTgAsBf3qK4jJmx",
+  //   })
+  //   .load({
+  //     model: import.meta.env.VITE_MODEL_ID,
+  //     version: import.meta.env.VITE_MODEL_VERSION,
+  //     onMetadata: function (m) {
+  //       console.log("model loaded");
+  //     },
+  //   })
+  //   .then((model) => {
+  //     setInterval(() => {
+  //       if (inferRunning) detect(model);
+  //     }, 10);
+  //   });
+
+  useEffect(startInfer, []);
 
   // const stopInfer = () => {
   //     inferRunning = false;
@@ -156,16 +175,15 @@ function App() {
 
   return (
     <>
-      <div className="bg-red-500">Hi</div>
-      {/* <Webcam
+      <Webcam
         ref={webcamRef}
         muted={true}
-        className="absolute mx-auto left-0 right-0 text-center z-10 h-96"
+        className="absolute mx-auto left-0 right-0 text-center z-10 w-[640px] h-[480px]"
       />
       <canvas
         ref={canvasRef}
         className="absolute mx-auto left-0 right-0 text-center z-20"
-      /> */}
+      />
     </>
   );
 }
