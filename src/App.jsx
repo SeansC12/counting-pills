@@ -1,9 +1,10 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import Webcam from "react-webcam";
 
 function App() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
+  const [pillCount, setPillCount] = useState(0);
   let inferRunning;
   var model;
 
@@ -73,6 +74,9 @@ function App() {
       const detections = await model.detect(
         webcamRef.current.video
       );
+
+      setPillCount(detections.length);
+      console.log(detections);
 
       const ctx = canvasRef.current.getContext("2d");
       drawBoxes(detections, ctx);
@@ -175,15 +179,20 @@ function App() {
 
   return (
     <>
-      <Webcam
-        ref={webcamRef}
-        muted={true}
-        className="absolute mx-auto left-0 right-0 text-center z-10 w-[640px] h-[480px]"
-      />
-      <canvas
-        ref={canvasRef}
-        className="absolute mx-auto left-0 right-0 text-center z-20"
-      />
+      <div>
+        <Webcam
+          ref={webcamRef}
+          muted={true}
+          className="absolute mx-auto left-0 right-0 text-center z-10 w-[640px] h-[480px]"
+        />
+        <canvas
+          ref={canvasRef}
+          className="absolute mx-auto left-0 right-0 text-center z-20"
+        />
+      </div>
+      <div className="pt-[32rem] w-full flex items-center justify-center font-bold text-xl">
+        Number of pills: {pillCount}
+      </div>
     </>
   );
 }
