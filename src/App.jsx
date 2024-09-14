@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from "react";
+import { Button } from "./components/ui/button";
 import Webcam from "react-webcam";
 
 function App() {
@@ -8,7 +9,7 @@ function App() {
   let inferRunning;
   var model;
 
-  const startInfer = () => {
+  const startPillCountingInference = () => {
     inferRunning = true;
     window.roboflow
       .auth({
@@ -16,46 +17,52 @@ function App() {
           .VITE_PUBLISHABLE_ROBOFLOW_API_KEY,
       })
       .load({
-        model: import.meta.env.VITE_MODEL_ID,
-        version: import.meta.env.VITE_MODEL_VERSION,
+        model: import.meta.env.VITE_COUNTING_MODEL_ID,
+        version: import.meta.env
+          .VITE_COUNTING_MODEL_VERSION,
         onMetadata: function (m) {
           console.log("model loaded");
         },
       })
       .then((model) => {
         setInterval(() => {
-          if (inferRunning) detect(model);
+          if (!inferRunning) detect(model, "#FF0000");
         }, 10);
       });
   };
 
-  // roboflow
-  //   .auth({
-  //     // publishable_key: import.meta.env
-  //     //   .VITE_PUBLISHABLE_ROBOFLOW_API_KEY,
-  //     publishable_key: "FlWb1hTgAsBf3qK4jJmx",
-  //   })
-  //   .load({
-  //     model: import.meta.env.VITE_MODEL_ID,
-  //     version: import.meta.env.VITE_MODEL_VERSION,
-  //     onMetadata: function (m) {
-  //       console.log("model loaded");
-  //     },
-  //   })
-  //   .then((model) => {
-  //     setInterval(() => {
-  //       if (inferRunning) detect(model);
-  //     }, 10);
-  //   });
+  const startDamagedPillsInference = () => {
+    inferRunning = true;
+    window.roboflow
+      .auth({
+        publishable_key: import.meta.env
+          .VITE_PUBLISHABLE_ROBOFLOW_API_KEY,
+      })
+      .load({
+        model: import.meta.env.VITE_DAMAGED_MODEL_ID,
+        version: import.meta.env.VITE_DAMAGED_MODEL_VERSION,
+        onMetadata: function (m) {
+          console.log("model loaded");
+        },
+      })
+      .then((model) => {
+        setInterval(() => {
+          if (!inferRunning) detect(model, "#00FF00");
+        }, 10);
+      });
+  };
 
-  useEffect(startInfer, []);
+  useEffect(() => {
+    startPillCountingInference();
+    startDamagedPillsInference();
+  }, []);
 
   // const stopInfer = () => {
   //     inferRunning = false;
   //     if (model) model.teardown();
   // };
 
-  const detect = async (model) => {
+  const detect = async (model, colour) => {
     // Check data is available
     if (
       typeof webcamRef.current !== "undefined" &&
@@ -76,10 +83,9 @@ function App() {
       );
 
       setPillCount(detections.length);
-      console.log(detections);
-
+      console.log(colour);
       const ctx = canvasRef.current.getContext("2d");
-      drawBoxes(detections, ctx);
+      drawBoxes(detections, ctx, colour);
     }
   };
 
@@ -98,7 +104,7 @@ function App() {
       );
   };
 
-  const drawBoxes = (detections, ctx) => {
+  const drawBoxes = (detections, ctx, colour) => {
     ctx.clearRect(
       0,
       0,
@@ -123,21 +129,24 @@ function App() {
       var w = row.width;
       var h = row.height;
 
+      console.log(colour);
+
       //box
       ctx.beginPath();
       ctx.lineWidth = 1;
-      ctx.strokeStyle = row.color;
+      // ctx.strokeStyle = row.color;
+      ctx.strokeStyle = colour;
       ctx.rect(x, y, w, h);
       ctx.stroke();
 
       //shade
-      ctx.fillStyle = "black";
+      ctx.fillStyle = colour;
       ctx.globalAlpha = 0.2;
       ctx.fillRect(x, y, w, h);
       ctx.globalAlpha = 1.0;
 
       //label
-      var fontColor = "black";
+      var fontColor = "white";
       var fontSize = 12;
       ctx.font = `${fontSize}px monospace`;
       ctx.textAlign = "center";
@@ -148,9 +157,10 @@ function App() {
       const textHeight = fontSize;
       var textWidth = ctx.measureText(msgTxt).width;
 
+      ctx.strokeStyle = colour;
+      ctx.fillStyle = colour;
+
       if (textHeight <= h && textWidth <= w) {
-        ctx.strokeStyle = row.color;
-        ctx.fillStyle = row.color;
         ctx.fillRect(
           x - ctx.lineWidth / 2,
           y - textHeight - ctx.lineWidth,
@@ -162,8 +172,6 @@ function App() {
         ctx.fillText(msgTxt, x + textWidth / 2 + 1, y - 1);
       } else {
         textWidth = ctx.measureText(confTxt).width;
-        ctx.strokeStyle = row.color;
-        ctx.fillStyle = row.color;
         ctx.fillRect(
           x - ctx.lineWidth / 2,
           y - textHeight - ctx.lineWidth,
@@ -183,7 +191,7 @@ function App() {
         <Webcam
           ref={webcamRef}
           muted={true}
-          className="absolute mx-auto left-0 right-0 text-center z-10 w-[640px] h-[480px]"
+          className="absolute mx-auto left-0 right-0 text-center z-10 h-full aspect-[4/3]"
         />
         <canvas
           ref={canvasRef}
@@ -193,6 +201,7 @@ function App() {
       <div className="pt-[32rem] w-full flex items-center justify-center font-bold text-xl">
         Number of pills: {pillCount}
       </div>
+      <Button>hi</Button>
     </>
   );
 }
