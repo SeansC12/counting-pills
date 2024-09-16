@@ -195,7 +195,7 @@ function App() {
   };
 
   return (
-    <div className="p-2 flex h-[600px] gap-2">
+    <div className="p-4 flex h-[600px] gap-4">
       <div
         className={cn(
           "w-[" + WEBCAM_VIDEO_WIDTH + "px]",
@@ -224,7 +224,7 @@ function App() {
           />
         </div>
       </div>
-      <div className="flex flex-col grow">
+      <div className="flex flex-col grow gap-4">
         <PillProgressCard
           pillCount={pillCount}
           totalPillCount={totalPillCount}
