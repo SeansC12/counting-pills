@@ -9,8 +9,18 @@ module.exports = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      animation: {
+        "pulse-gradient":
+          "pulse-gradient 2s ease-in-out infinite",
+      },
+      // keyframes: {
+      //   "pulse-gradient": {
+      //     "0%, 100%": { backgroundPosition: "0% 50%" },
+      //     "50%": { backgroundPosition: "100% 50%" },
+      //   },
+      // },
       colors: {
-        destructive: "#63000f",
+        destructive: "#D22B2B",
       },
     },
   },

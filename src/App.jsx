@@ -1,20 +1,24 @@
 import { useRef, useEffect, useState } from "react";
-import { Button } from "./components/ui/button";
 import PillProgressCard from "./components/PillProgressCard";
 import AlertCard from "./components/AlertCard";
+import PillCountChangeKeypad from "./components/Keypad";
+import PulsingBorder from "./components/PulsingBorder";
 import Webcam from "react-webcam";
+import { cn } from "./lib/utils";
 
 function App() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
   const [pillCount, setPillCount] = useState(5);
-  const [totalPills, setTotalPills] = useState(40);
+  const [totalPillCount, setTotalPillCount] = useState(40);
   const [hasAlert, setHasAlert] = useState(true);
+  const WEBCAM_VIDEO_HEIGHT = 584;
+  const WEBCAM_VIDEO_WIDTH = 584;
   let inferRunning;
   var model;
 
   const startPillCountingInference = () => {
-    inferRunning = false;
+    inferRunning = true;
     window.roboflow
       .auth({
         publishable_key: import.meta.env
@@ -36,7 +40,7 @@ function App() {
   };
 
   const startDamagedPillsInference = () => {
-    inferRunning = false;
+    inferRunning = true;
     window.roboflow
       .auth({
         publishable_key: import.meta.env
@@ -79,6 +83,10 @@ function App() {
 
       webcamRef.current.video.width = videoWidth;
       webcamRef.current.video.height = videoHeight;
+
+      console.log(
+        "hi" + webcamRef.current.video.videoWidth
+      );
 
       adjustCanvas(videoWidth, videoHeight);
 
@@ -131,8 +139,6 @@ function App() {
       var y = row.y - row.height / 2;
       var w = row.width;
       var h = row.height;
-
-      console.log(colour);
 
       //box
       ctx.beginPath();
@@ -189,44 +195,45 @@ function App() {
   };
 
   return (
-    <div className="p-2 flex h-[600px]">
-      <div className="flex flex-col h-full gap-2">
-        <div className="h-[480px] aspect-[4/3] relative">
-          {/* <div className="relative z-10"> */}
+    <div className="p-2 flex h-[600px] gap-2">
+      <div
+        className={cn(
+          "w-[" + WEBCAM_VIDEO_WIDTH + "px]",
+          "aspect-square"
+        )}
+      >
+        <div
+          className={cn(
+            "h-[" + WEBCAM_VIDEO_HEIGHT + "px]",
+            "w-[" + WEBCAM_VIDEO_WIDTH + "px]",
+            "relative"
+          )}
+        >
           <Webcam
             ref={webcamRef}
             muted={true}
-            className="absolute left-0 right-0 text-center z-10"
+            videoConstraints={{
+              width: WEBCAM_VIDEO_WIDTH,
+              height: WEBCAM_VIDEO_HEIGHT,
+            }}
+            className="absolute left-0 right-0 text-center z-10 rounded-xl"
           />
           <canvas
             ref={canvasRef}
             className="absolute left-0 right-0 text-center z-20"
           />
         </div>
-        {/* </div> */}
-        <div className="grow">
-          <PillProgressCard
-            pillCount={pillCount}
-            totalPills={totalPills}
-          />
-        </div>
-        {/* <button
-          onClick={() =>
-            setPillCount((curr) => Math.max((curr += 1), 1))
-          }
-        >
-          +
-        </button>
-        <button
-          onClick={() =>
-            setPillCount((curr) => Math.max((curr -= 1), 0))
-          }
-        >
-          -
-        </button> */}
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col grow">
+        <PillProgressCard
+          pillCount={pillCount}
+          totalPillCount={totalPillCount}
+        />
         <AlertCard hasAlert={hasAlert} />
+        <PillCountChangeKeypad
+          totalPillCount={totalPillCount}
+          setTotalPillCount={setTotalPillCount}
+        />
       </div>
     </div>
   );

@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -19,13 +15,13 @@ export default function AlertCard({ hasAlert }) {
   return (
     <Card
       className={cn(
-        "w-[300px] transition-colors duration-300",
+        "transition-colors duration-300 w-full",
         hasAlert ? "border-destructive" : "border-green-500"
       )}
     >
       <CardContent className="pt-6">
         {hasAlert ? (
-          <Alert message="This is an alert message!" />
+          <Alert message="xxxx Damaged pills detected" />
         ) : (
           <div className="flex items-center space-x-2 bg-green-100 text-green-700 rounded-md p-3">
             <CheckCircle2 className="h-4 w-4" />
@@ -35,15 +31,6 @@ export default function AlertCard({ hasAlert }) {
           </div>
         )}
       </CardContent>
-      <CardFooter>
-        <Button
-          onClick={() => setHasAlert(!hasAlert)}
-          variant="outline"
-          className="w-full"
-        >
-          {hasAlert ? "Clear Alert" : "Trigger Alert"}
-        </Button>
-      </CardFooter>
     </Card>
   );
 }

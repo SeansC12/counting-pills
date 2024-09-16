@@ -15,13 +15,15 @@ export default function PillProgressCard({
     : (pillCount / totalPills) * 100;
 
   return (
-    <Card className="w-full h-full flex items-center">
+    <Card className="flex items-center">
       <CardContent className="p-3 grow">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-lg font-medium">Pills</span>
+        <div className="flex items-center justify-center mb-2">
+          {/* <span className="text-lg font-medium">
+            Pill Count
+          </span> */}
           <span
             className={cn(
-              "text-lg font-bold",
+              "text-4xl font-bold",
               isExceeded && "text-red-500"
             )}
           >
