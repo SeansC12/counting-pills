@@ -23,14 +23,14 @@ export default function PillCountChangeKeypad({
 
   return (
     <Card className="w-full max-w-md mx-auto p-3 h-max">
-      <div className="mb-4 p-2 bg-gray-100 rounded-md">
+      {/* <div className="mb-4 p-2 bg-gray-100 rounded-md">
         <p
           className="text-2xl text-right h-8"
           aria-live="polite"
         >
           {totalPillCount || "0"}
         </p>
-      </div>
+      </div> */}
       <div className="grid grid-cols-3 gap-2">
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map(
           (digit, index) => (
@@ -46,13 +46,6 @@ export default function PillCountChangeKeypad({
             </Button>
           )
         )}
-        {/* <Button
-            variant="outline"
-            onClick={() => handleKeyPress("0")}
-            className="text-lg font-semibold h-12"
-          >
-            0
-          </Button> */}
         <Button
           variant="outline"
           onClick={handleErase}

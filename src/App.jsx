@@ -32,6 +32,7 @@ function App() {
         model: import.meta.env.VITE_COUNTING_MODEL_ID,
         version: import.meta.env
           .VITE_COUNTING_MODEL_VERSION,
+
         onMetadata: function (m) {
           console.log("model loaded");
         },
