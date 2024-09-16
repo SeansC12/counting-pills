@@ -1,16 +1,20 @@
 import { useRef, useEffect, useState } from "react";
 import { Button } from "./components/ui/button";
+import PillProgressCard from "./components/PillProgressCard";
+import AlertCard from "./components/AlertCard";
 import Webcam from "react-webcam";
 
 function App() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
-  const [pillCount, setPillCount] = useState(0);
+  const [pillCount, setPillCount] = useState(5);
+  const [totalPills, setTotalPills] = useState(40);
+  const [hasAlert, setHasAlert] = useState(true);
   let inferRunning;
   var model;
 
   const startPillCountingInference = () => {
-    inferRunning = true;
+    inferRunning = false;
     window.roboflow
       .auth({
         publishable_key: import.meta.env
@@ -26,13 +30,13 @@ function App() {
       })
       .then((model) => {
         setInterval(() => {
-          if (!inferRunning) detect(model, "#FF0000");
+          if (inferRunning) detect(model, "#FF0000");
         }, 10);
       });
   };
 
   const startDamagedPillsInference = () => {
-    inferRunning = true;
+    inferRunning = false;
     window.roboflow
       .auth({
         publishable_key: import.meta.env
@@ -47,7 +51,7 @@ function App() {
       })
       .then((model) => {
         setInterval(() => {
-          if (!inferRunning) detect(model, "#00FF00");
+          if (inferRunning) detect(model, "#00FF00");
         }, 10);
       });
   };
@@ -82,8 +86,7 @@ function App() {
         webcamRef.current.video
       );
 
-      setPillCount(detections.length);
-      console.log(colour);
+      setPillCount(Math.max(detections.length, 0));
       const ctx = canvasRef.current.getContext("2d");
       drawBoxes(detections, ctx, colour);
     }
@@ -186,23 +189,46 @@ function App() {
   };
 
   return (
-    <>
-      <div>
-        <Webcam
-          ref={webcamRef}
-          muted={true}
-          className="absolute mx-auto left-0 right-0 text-center z-10 h-full aspect-[4/3]"
-        />
-        <canvas
-          ref={canvasRef}
-          className="absolute mx-auto left-0 right-0 text-center z-20"
-        />
+    <div className="p-2 flex h-[600px]">
+      <div className="flex flex-col h-full gap-2">
+        <div className="h-[480px] aspect-[4/3] relative">
+          {/* <div className="relative z-10"> */}
+          <Webcam
+            ref={webcamRef}
+            muted={true}
+            className="absolute left-0 right-0 text-center z-10"
+          />
+          <canvas
+            ref={canvasRef}
+            className="absolute left-0 right-0 text-center z-20"
+          />
+        </div>
+        {/* </div> */}
+        <div className="grow">
+          <PillProgressCard
+            pillCount={pillCount}
+            totalPills={totalPills}
+          />
+        </div>
+        {/* <button
+          onClick={() =>
+            setPillCount((curr) => Math.max((curr += 1), 1))
+          }
+        >
+          +
+        </button>
+        <button
+          onClick={() =>
+            setPillCount((curr) => Math.max((curr -= 1), 0))
+          }
+        >
+          -
+        </button> */}
       </div>
-      <div className="pt-[32rem] w-full flex items-center justify-center font-bold text-xl">
-        Number of pills: {pillCount}
+      <div className="flex flex-col">
+        <AlertCard hasAlert={hasAlert} />
       </div>
-      <Button>hi</Button>
-    </>
+    </div>
   );
 }
 
