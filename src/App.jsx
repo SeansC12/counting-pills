@@ -16,8 +16,8 @@ function App() {
   const [totalPillCount, setTotalPillCount] = useState(40);
 
   const [hasAlert, setHasAlert] = useState(true);
-  const WEBCAM_VIDEO_HEIGHT = 584;
-  const WEBCAM_VIDEO_WIDTH = 584;
+  const WEBCAM_VIDEO_HEIGHT = 568;
+  const WEBCAM_VIDEO_WIDTH = 568;
   let inferRunning;
   var model;
 
@@ -208,9 +208,9 @@ function App() {
       >
         <div
           className={cn(
+            "relative",
             "h-[" + WEBCAM_VIDEO_HEIGHT + "px]",
-            "w-[" + WEBCAM_VIDEO_WIDTH + "px]",
-            "relative"
+            "w-[" + WEBCAM_VIDEO_WIDTH + "px]"
           )}
         >
           <Webcam
