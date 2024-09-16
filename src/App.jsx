@@ -9,8 +9,12 @@ import { cn } from "./lib/utils";
 function App() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
+
   const [pillCount, setPillCount] = useState(5);
+  const [damagedPillCount, setDamagedPillCount] =
+    useState(0);
   const [totalPillCount, setTotalPillCount] = useState(40);
+
   const [hasAlert, setHasAlert] = useState(true);
   const WEBCAM_VIDEO_HEIGHT = 584;
   const WEBCAM_VIDEO_WIDTH = 584;
@@ -64,11 +68,6 @@ function App() {
     startPillCountingInference();
     startDamagedPillsInference();
   }, []);
-
-  // const stopInfer = () => {
-  //     inferRunning = false;
-  //     if (model) model.teardown();
-  // };
 
   const detect = async (model, colour) => {
     // Check data is available
@@ -194,6 +193,11 @@ function App() {
     });
   };
 
+  // const stopInfer = () => {
+  //     inferRunning = false;
+  //     if (model) model.teardown();
+  // };
+
   return (
     <div className="p-4 flex h-[600px] gap-4">
       <div
@@ -229,10 +233,13 @@ function App() {
           pillCount={pillCount}
           totalPillCount={totalPillCount}
         />
-        <AlertCard hasAlert={hasAlert} />
         <PillCountChangeKeypad
           totalPillCount={totalPillCount}
           setTotalPillCount={setTotalPillCount}
+        />
+        <AlertCard
+          hasAlert={hasAlert}
+          damagedPillCount={damagedPillCount}
         />
       </div>
     </div>
