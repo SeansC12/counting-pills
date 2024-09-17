@@ -34,7 +34,7 @@ function App() {
           .VITE_COUNTING_MODEL_VERSION,
 
         onMetadata: function (m) {
-          console.log("model loaded");
+          console.log(m);
         },
       })
       .then((model) => {
