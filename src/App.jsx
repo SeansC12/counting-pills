@@ -98,7 +98,9 @@ function App() {
         webcamRef.current.video
       );
 
-      setPillCount(Math.max(detections.length, 0));
+      // setPillCount(Math.max(detections.length, 0));
+      console.log(detections);
+      setPillCount(detections.length);
       const ctx = canvasRef.current.getContext("2d");
       drawBoxes(detections, ctx, colour);
     }
