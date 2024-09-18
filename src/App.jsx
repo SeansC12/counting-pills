@@ -10,7 +10,7 @@ function App() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
 
-  const [pillCount, setPillCount] = useState(5);
+  const [pillCount, setPillCount] = useState(0);
   const [damagedPillCount, setDamagedPillCount] =
     useState(0);
   const [totalPillCount, setTotalPillCount] = useState(40);
@@ -34,7 +34,11 @@ function App() {
           .VITE_COUNTING_MODEL_VERSION,
 
         onMetadata: function (m) {
-          console.log(m);
+          console.log(
+            "model with id",
+            import.meta.env.VITE_COUNTING_MODEL_ID,
+            "has loaded"
+          );
         },
       })
       .then((model) => {
@@ -55,7 +59,11 @@ function App() {
         model: import.meta.env.VITE_DAMAGED_MODEL_ID,
         version: import.meta.env.VITE_DAMAGED_MODEL_VERSION,
         onMetadata: function (m) {
-          console.log("model loaded");
+          console.log(
+            "model with id",
+            import.meta.env.VITE_COUNTING_MODEL_ID,
+            "has loaded"
+          );
         },
       })
       .then((model) => {
@@ -83,10 +91,6 @@ function App() {
 
       webcamRef.current.video.width = videoWidth;
       webcamRef.current.video.height = videoHeight;
-
-      console.log(
-        "hi" + webcamRef.current.video.videoWidth
-      );
 
       adjustCanvas(videoWidth, videoHeight);
 
