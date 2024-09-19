@@ -97,7 +97,6 @@ function App() {
       const detections = await model.detect(
         webcamRef.current.video
       );
-      console.log(webcamRef.current.video);
 
       // setPillCount(Math.max(detections.length, 0));
       console.log(detections);
