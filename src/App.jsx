@@ -122,63 +122,57 @@ function App() {
     detections.forEach((row) => {
       if (row.confidence < 0) return;
 
-      //dimensions
-      var x = row.x - row.width / 2;
-      var y = row.y - row.height / 2;
-      var w = row.width;
-      var h = row.height;
+      // dimensions
+      const x = row.x + row.width / 2;
+      const y = row.y - row.height / 2;
+      const radius = row.width * 0.2;
+      const w = row.width;
+      const h = row.height;
 
-      //box
+      // circle
       ctx.beginPath();
-      ctx.lineWidth = 1;
-      // ctx.strokeStyle = row.color;
       ctx.strokeStyle = colour;
-      ctx.rect(x, y, w, h);
-      ctx.stroke();
-
-      //shade
+      ctx.arc(row.x, row.y, radius, 0, 2 * Math.PI);
       ctx.fillStyle = colour;
-      ctx.globalAlpha = 0.2;
-      ctx.fillRect(x, y, w, h);
-      ctx.globalAlpha = 1.0;
+      ctx.fill();
 
-      //label
-      var fontColor = "white";
-      var fontSize = 12;
-      ctx.font = `${fontSize}px monospace`;
-      ctx.textAlign = "center";
-      var classTxt = row.class;
-      var confTxt =
-        (row.confidence * 100).toFixed().toString() + "%";
-      var msgTxt = classTxt + " " + confTxt;
-      const textHeight = fontSize;
-      var textWidth = ctx.measureText(msgTxt).width;
+      // label
+      // var fontColor = "white";
+      // var fontSize = 12;
+      // ctx.font = `${fontSize}px monospace`;
+      // ctx.textAlign = "center";
+      // var classTxt = row.class;
+      // var confTxt =
+      //   (row.confidence * 100).toFixed().toString() + "%";
+      // var msgTxt = classTxt + " " + confTxt;
+      // const textHeight = fontSize;
+      // var textWidth = ctx.measureText(msgTxt).width;
 
-      ctx.strokeStyle = colour;
-      ctx.fillStyle = colour;
+      // ctx.strokeStyle = colour;
+      // ctx.fillStyle = colour;
 
-      if (textHeight <= h && textWidth <= w) {
-        ctx.fillRect(
-          x - ctx.lineWidth / 2,
-          y - textHeight - ctx.lineWidth,
-          textWidth + 2,
-          textHeight + 1
-        );
-        ctx.stroke();
-        ctx.fillStyle = fontColor;
-        ctx.fillText(msgTxt, x + textWidth / 2 + 1, y - 1);
-      } else {
-        textWidth = ctx.measureText(confTxt).width;
-        ctx.fillRect(
-          x - ctx.lineWidth / 2,
-          y - textHeight - ctx.lineWidth,
-          textWidth + 2,
-          textHeight + 1
-        );
-        ctx.stroke();
-        ctx.fillStyle = fontColor;
-        ctx.fillText(confTxt, x + textWidth / 2 + 1, y - 1);
-      }
+      // if (textHeight <= h && textWidth <= w) {
+      //   ctx.fillRect(
+      //     x - ctx.lineWidth / 2,
+      //     y - textHeight - ctx.lineWidth,
+      //     textWidth + 2,
+      //     textHeight + 1
+      //   );
+      //   ctx.stroke();
+      //   ctx.fillStyle = fontColor;
+      //   ctx.fillText(msgTxt, x + textWidth / 2 + 1, y - 1);
+      // } else {
+      //   textWidth = ctx.measureText(confTxt).width;
+      //   ctx.fillRect(
+      //     x - ctx.lineWidth / 2,
+      //     y - textHeight - ctx.lineWidth,
+      //     textWidth + 2,
+      //     textHeight + 1
+      //   );
+      //   ctx.stroke();
+      //   ctx.fillStyle = fontColor;
+      //   ctx.fillText(confTxt, x + textWidth / 2 + 1, y - 1);
+      // }
     });
   };
 
