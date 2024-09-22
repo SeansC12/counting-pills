@@ -1,14 +1,21 @@
 import { useRef, useEffect, useState } from "react";
+import Webcam from "react-webcam";
+import useInference from "./hooks/useInference";
+import { cn } from "./lib/utils";
+
 import PillProgressCard from "./components/PillProgressCard";
 import AlertCard from "./components/AlertCard";
 import PillCountChangeKeypad from "./components/Keypad";
 import PulsingBorder from "./components/PulsingBorder";
-import Webcam from "react-webcam";
-import { cn } from "./lib/utils";
+
+const WEBCAM_VIDEO_HEIGHT = 568;
+const WEBCAM_VIDEO_WIDTH = 568;
 
 function App() {
-  const webcamRef = useRef(null);
-  const canvasRef = useRef(null);
+  const webcamRef = useRef();
+  const canvasRef = useRef();
+
+  const [rawPredictions, setRawPredictions] = useState();
 
   const [pillCount, setPillCount] = useState(0);
   const [damagedPillCount, setDamagedPillCount] =
@@ -16,66 +23,50 @@ function App() {
   const [totalPillCount, setTotalPillCount] = useState(40);
 
   const [hasAlert, setHasAlert] = useState(true);
-  const WEBCAM_VIDEO_HEIGHT = 568;
-  const WEBCAM_VIDEO_WIDTH = 568;
-  let inferRunning;
-  var model;
-
-  const startPillCountingInference = () => {
-    inferRunning = true;
-    window.roboflow
-      .auth({
-        publishable_key: import.meta.env
-          .VITE_PUBLISHABLE_ROBOFLOW_API_KEY,
-      })
-      .load({
-        model: import.meta.env.VITE_COUNTING_MODEL_ID,
-        version: import.meta.env
-          .VITE_COUNTING_MODEL_VERSION,
-
-        onMetadata: function (m) {
-          console.log(
-            "model with id",
-            import.meta.env.VITE_COUNTING_MODEL_ID,
-            "has loaded"
-          );
-        },
-      })
-      .then((model) => {
-        setInterval(() => {
-          if (inferRunning) detect(model, "#FF0000");
-        }, 10);
-      });
-  };
-
-  const startDamagedPillsInference = () => {
-    inferRunning = true;
-    window.roboflow
-      .auth({
-        publishable_key: import.meta.env
-          .VITE_PUBLISHABLE_ROBOFLOW_API_KEY,
-      })
-      .load({
-        model: import.meta.env.VITE_DAMAGED_MODEL_ID,
-        version: import.meta.env.VITE_DAMAGED_MODEL_VERSION,
-        onMetadata: function (m) {
-          console.log(
-            "model with id",
-            import.meta.env.VITE_COUNTING_MODEL_ID,
-            "has loaded"
-          );
-        },
-      })
-      .then((model) => {
-        setInterval(() => {
-          if (inferRunning) detect(model, "#00FF00");
-        }, 10);
-      });
-  };
 
   useEffect(() => {
-    startPillCountingInference();
-    startDamagedPillsInference();
+    setInterval(async () => {
+      if (
+        typeof webcamRef.current !== "undefined" &&
+        webcamRef.current !== null &&
+        webcamRef.current.video.readyState === 4
+      ) {
+        const imageToSend =
+          webcamRef.current.getScreenshot();
+
+        const res = await fetch("http://127.0.0.1:5001", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            image: imageToSend,
+          }),
+        });
+
+        const data = await res.json();
+
+        console.log(data.predictions);
+        setPillCount(data ? data.predictions.length : 0);
+
+        const detections = data.predictions;
+        const colour = "#FF0000";
+
+        const videoWidth =
+          webcamRef.current.video.videoWidth;
+        const videoHeight =
+          webcamRef.current.video.videoHeight;
+
+        webcamRef.current.video.width = videoWidth;
+        webcamRef.current.video.height = videoHeight;
+
+        adjustCanvas(videoWidth, videoHeight);
+
+        const ctx = canvasRef.current.getContext("2d");
+        if (detections) drawBoxes(detections, ctx, colour);
+      }
+    }, 500);
   }, []);
 
   const detect = async (model, colour) => {
@@ -129,15 +120,6 @@ function App() {
       canvasRef.current.height
     );
     detections.forEach((row) => {
-      if (true) {
-        //video
-        var temp = row.bbox;
-        temp.class = row.class;
-        temp.color = row.color;
-        temp.confidence = row.confidence;
-        row = temp;
-      }
-
       if (row.confidence < 0) return;
 
       //dimensions
@@ -223,6 +205,7 @@ function App() {
           <Webcam
             ref={webcamRef}
             muted={true}
+            screenshotFormat="image/jpeg"
             videoConstraints={{
               width: WEBCAM_VIDEO_WIDTH,
               height: WEBCAM_VIDEO_HEIGHT,

@@ -9,7 +9,6 @@ export default function PillProgressCard({
   pillCount,
   totalPillCount,
 }) {
-  console.log(pillCount);
   const isExceeded = pillCount > totalPillCount;
   const isCorrectValue =
     pillCount.toString() === totalPillCount;
