@@ -1,7 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import Webcam from "react-webcam";
 import useInference from "./hooks/useInference";
-import delay from "./lib/delay";
 import { cn } from "./lib/utils";
 
 import PillProgressCard from "./components/PillProgressCard";
