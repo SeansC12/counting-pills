@@ -25,7 +25,7 @@ function App() {
   const [hasAlert, setHasAlert] = useState(true);
 
   useEffect(() => {
-    setInterval(async () => {
+    const fetchInterval = setInterval(async () => {
       if (
         typeof webcamRef.current !== "undefined" &&
         webcamRef.current !== null &&
@@ -66,7 +66,10 @@ function App() {
         const ctx = canvasRef.current.getContext("2d");
         if (detections) drawBoxes(detections, ctx, colour);
       }
-    }, 500);
+      return () => {
+        clearInterval(fetchInterval);
+      };
+    }, 1000);
   }, []);
 
   const detect = async (model, colour) => {
