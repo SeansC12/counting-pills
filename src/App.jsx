@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import Webcam from "react-webcam";
 import useInference from "./hooks/useInference";
+import delay from "./lib/delay";
 import { cn } from "./lib/utils";
 
 import PillProgressCard from "./components/PillProgressCard";
@@ -14,8 +15,6 @@ const WEBCAM_VIDEO_WIDTH = 568;
 function App() {
   const webcamRef = useRef();
   const canvasRef = useRef();
-
-  const [rawPredictions, setRawPredictions] = useState();
 
   const [pillCount, setPillCount] = useState(0);
   const [damagedPillCount, setDamagedPillCount] =
@@ -66,39 +65,11 @@ function App() {
         const ctx = canvasRef.current.getContext("2d");
         if (detections) drawBoxes(detections, ctx, colour);
       }
-      return () => {
-        clearInterval(fetchInterval);
-      };
-    }, 1000);
+    }, 500);
+    return () => {
+      clearInterval(fetchInterval);
+    };
   }, []);
-
-  const detect = async (model, colour) => {
-    // Check data is available
-    if (
-      typeof webcamRef.current !== "undefined" &&
-      webcamRef.current !== null &&
-      webcamRef.current.video.readyState === 4
-    ) {
-      const videoWidth = webcamRef.current.video.videoWidth;
-      const videoHeight =
-        webcamRef.current.video.videoHeight;
-
-      webcamRef.current.video.width = videoWidth;
-      webcamRef.current.video.height = videoHeight;
-
-      adjustCanvas(videoWidth, videoHeight);
-
-      const detections = await model.detect(
-        webcamRef.current.video
-      );
-
-      // setPillCount(Math.max(detections.length, 0));
-      console.log(detections);
-      setPillCount(detections.length);
-      const ctx = canvasRef.current.getContext("2d");
-      drawBoxes(detections, ctx, colour);
-    }
-  };
 
   const adjustCanvas = (w, h) => {
     canvasRef.current.width = w * window.devicePixelRatio;
@@ -126,16 +97,12 @@ function App() {
       if (row.confidence < 0) return;
 
       // dimensions
-      const x = row.x + row.width / 2;
-      const y = row.y - row.height / 2;
       const radius = row.width * 0.2;
-      const w = row.width;
-      const h = row.height;
 
       // circle
       ctx.beginPath();
       ctx.strokeStyle = colour;
-      ctx.arc(row.x, row.y, radius, 0, 2 * Math.PI);
+      ctx.arc(row.x, row.y, 6.0, 0, 2 * Math.PI);
       ctx.fillStyle = colour;
       ctx.fill();
 
@@ -178,11 +145,6 @@ function App() {
       // }
     });
   };
-
-  // const stopInfer = () => {
-  //     inferRunning = false;
-  //     if (model) model.teardown();
-  // };
 
   return (
     <div className="p-4 flex h-[600px] gap-4">
