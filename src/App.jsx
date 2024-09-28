@@ -6,7 +6,7 @@ import { cn } from "./lib/utils";
 import PillProgressCard from "./components/PillProgressCard";
 import AlertCard from "./components/AlertCard";
 import PillCountChangeKeypad from "./components/Keypad";
-import PulsingBorder from "./components/PulsingBorder";
+// import PulsingBorder from "./components/PulsingBorder";
 
 const WEBCAM_VIDEO_HEIGHT = 568;
 const WEBCAM_VIDEO_WIDTH = 568;
