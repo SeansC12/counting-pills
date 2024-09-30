@@ -3,6 +3,12 @@ import Webcam from "react-webcam";
 // import useInference from "./hooks/useInference";
 import { cn } from "./lib/utils";
 
+import {
+  drawBoxes,
+  adjustCanvas,
+  getDamagedPills,
+} from "./lib/utils";
+
 import PillProgressCard from "./components/PillProgressCard";
 import AlertCard from "./components/AlertCard";
 import PillCountChangeKeypad from "./components/Keypad";
@@ -49,7 +55,12 @@ function App() {
         setPillCount(data ? data.predictions.length : 0);
 
         const detections = data.predictions;
-        const colour = "#FF0000";
+        const brokenPillIndexes = getDamagedPills(
+          detections,
+          0.1
+        );
+        const normalColour = "#FF0000";
+        const brokenColour = "#00FF00";
 
         const videoWidth =
           webcamRef.current.video.videoWidth;
@@ -59,91 +70,24 @@ function App() {
         webcamRef.current.video.width = videoWidth;
         webcamRef.current.video.height = videoHeight;
 
-        adjustCanvas(videoWidth, videoHeight);
+        adjustCanvas(canvasRef, videoWidth, videoHeight);
 
         const ctx = canvasRef.current.getContext("2d");
-        if (detections) drawBoxes(detections, ctx, colour);
+        if (detections)
+          drawBoxes(
+            canvasRef,
+            detections,
+            ctx,
+            normalColour,
+            brokenColour,
+            brokenPillIndexes
+          );
       }
     }, 500);
     return () => {
       clearInterval(fetchInterval);
     };
   }, []);
-
-  const adjustCanvas = (w, h) => {
-    canvasRef.current.width = w * window.devicePixelRatio;
-    canvasRef.current.height = h * window.devicePixelRatio;
-
-    canvasRef.current.style.width = w + "px";
-    canvasRef.current.style.height = h + "px";
-
-    canvasRef.current
-      .getContext("2d")
-      .scale(
-        window.devicePixelRatio,
-        window.devicePixelRatio
-      );
-  };
-
-  const drawBoxes = (detections, ctx, colour) => {
-    ctx.clearRect(
-      0,
-      0,
-      canvasRef.current.width,
-      canvasRef.current.height
-    );
-    detections.forEach((row) => {
-      if (row.confidence < 0) return;
-
-      // dimensions
-      const radius = row.width * 0.2;
-
-      // circle
-      ctx.beginPath();
-      ctx.strokeStyle = colour;
-      ctx.arc(row.x, row.y, 6.0, 0, 2 * Math.PI);
-      ctx.fillStyle = colour;
-      ctx.fill();
-
-      // label
-      // var fontColor = "white";
-      // var fontSize = 12;
-      // ctx.font = `${fontSize}px monospace`;
-      // ctx.textAlign = "center";
-      // var classTxt = row.class;
-      // var confTxt =
-      //   (row.confidence * 100).toFixed().toString() + "%";
-      // var msgTxt = classTxt + " " + confTxt;
-      // const textHeight = fontSize;
-      // var textWidth = ctx.measureText(msgTxt).width;
-
-      // ctx.strokeStyle = colour;
-      // ctx.fillStyle = colour;
-
-      // if (textHeight <= h && textWidth <= w) {
-      //   ctx.fillRect(
-      //     x - ctx.lineWidth / 2,
-      //     y - textHeight - ctx.lineWidth,
-      //     textWidth + 2,
-      //     textHeight + 1
-      //   );
-      //   ctx.stroke();
-      //   ctx.fillStyle = fontColor;
-      //   ctx.fillText(msgTxt, x + textWidth / 2 + 1, y - 1);
-      // } else {
-      //   textWidth = ctx.measureText(confTxt).width;
-      //   ctx.fillRect(
-      //     x - ctx.lineWidth / 2,
-      //     y - textHeight - ctx.lineWidth,
-      //     textWidth + 2,
-      //     textHeight + 1
-      //   );
-      //   ctx.stroke();
-      //   ctx.fillStyle = fontColor;
-      //   ctx.fillText(confTxt, x + textWidth / 2 + 1, y - 1);
-      // }
-    });
-  };
 
   return (
     <div className="p-4 flex h-[600px] gap-4">
