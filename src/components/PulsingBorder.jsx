@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 export default function PulsingBorder({
-  isError = true,
+  isError,
   children,
 }) {
   return (
