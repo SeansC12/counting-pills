@@ -58,12 +58,7 @@ function App() {
         const normalColour = "#00FF00";
         const brokenColour = "#FF0000";
 
-        adjustCanvas(
-          webcamRef,
-          canvasRef,
-          videoWidth,
-          videoHeight
-        );
+        adjustCanvas(webcamRef, canvasRef);
 
         drawBoxes(
           canvasRef,
