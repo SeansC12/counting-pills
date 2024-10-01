@@ -90,52 +90,11 @@ export const drawBoxes = (
       colourToUse = normalColour;
     }
 
-    // dimensions
-    const radius = row.width * 0.2;
-
     // circle
     ctx.beginPath();
     ctx.strokeStyle = colourToUse;
     ctx.arc(row.x, row.y, 6.0, 0, 2 * Math.PI);
     ctx.fillStyle = colourToUse;
     ctx.fill();
-
-    // label
-    // var fontColor = "white";
-    // var fontSize = 12;
-    // ctx.font = `${fontSize}px monospace`;
-    // ctx.textAlign = "center";
-    // var classTxt = row.class;
-    // var confTxt =
-    //   (row.confidence * 100).toFixed().toString() + "%";
-    // var msgTxt = classTxt + " " + confTxt;
-    // const textHeight = fontSize;
-    // var textWidth = ctx.measureText(msgTxt).width;
-
-    // ctx.strokeStyle = normalColour;
-    // ctx.fillStyle = normalColour;
-
-    // if (textHeight <= h && textWidth <= w) {
-    //   ctx.fillRect(
-    //     x - ctx.lineWidth / 2,
-    //     y - textHeight - ctx.lineWidth,
-    //     textWidth + 2,
-    //     textHeight + 1
-    //   );
-    //   ctx.stroke();
-    //   ctx.fillStyle = fontColor;
-    //   ctx.fillText(msgTxt, x + textWidth / 2 + 1, y - 1);
-    // } else {
-    //   textWidth = ctx.measureText(confTxt).width;
-    //   ctx.fillRect(
-    //     x - ctx.lineWidth / 2,
-    //     y - textHeight - ctx.lineWidth,
-    //     textWidth + 2,
-    //     textHeight + 1
-    //   );
-    //   ctx.stroke();
-    //   ctx.fillStyle = fontColor;
-    //   ctx.fillText(confTxt, x + textWidth / 2 + 1, y - 1);
-    // }
   });
 };

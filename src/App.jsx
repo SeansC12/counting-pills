@@ -53,6 +53,9 @@ function App() {
         console.log(detections);
 
         setPillCount(detections ? detections.length : 0);
+        setDamagedPillCount(
+          detections.filter((d) => d.is_damaged).length
+        );
         if (!detections) return;
 
         const normalColour = "#00FF00";
