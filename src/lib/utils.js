@@ -44,12 +44,20 @@ export const getDamagedPills = (detections, error) => {
   return damagedIndexes;
 };
 
-export const adjustCanvas = (canvasRef, w, h) => {
-  canvasRef.current.width = w * window.devicePixelRatio;
-  canvasRef.current.height = h * window.devicePixelRatio;
+export const adjustCanvas = (webcamRef, canvasRef) => {
+  const videoWidth = webcamRef.current.video.videoWidth;
+  const videoHeight = webcamRef.current.video.videoHeight;
 
-  canvasRef.current.style.width = w + "px";
-  canvasRef.current.style.height = h + "px";
+  webcamRef.current.video.width = videoWidth;
+  webcamRef.current.video.height = videoHeight;
+
+  canvasRef.current.width =
+    videoWidth * window.devicePixelRatio;
+  canvasRef.current.height =
+    videoHeight * window.devicePixelRatio;
+
+  canvasRef.current.style.width = videoWidth + "px";
+  canvasRef.current.style.height = videoHeight + "px";
 
   canvasRef.current
     .getContext("2d")
@@ -62,11 +70,11 @@ export const adjustCanvas = (canvasRef, w, h) => {
 export const drawBoxes = (
   canvasRef,
   detections,
-  ctx,
   normalColour,
-  brokenColour,
-  brokenPillIndexes
+  brokenColour
 ) => {
+  const ctx = canvasRef.current.getContext("2d");
+
   ctx.clearRect(
     0,
     0,
@@ -76,7 +84,7 @@ export const drawBoxes = (
   detections.forEach((row, index) => {
     if (row.confidence < 0) return;
     let colourToUse;
-    if (brokenPillIndexes.includes(index)) {
+    if (row.is_damaged) {
       colourToUse = brokenColour;
     } else {
       colourToUse = normalColour;

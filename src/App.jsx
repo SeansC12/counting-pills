@@ -49,39 +49,28 @@ function App() {
           }),
         });
 
-        const data = await res.json();
+        const detections = await res.json();
+        console.log(detections);
 
-        console.log(data.predictions);
-        setPillCount(data ? data.predictions.length : 0);
+        setPillCount(detections ? detections.length : 0);
+        if (!detections) return;
 
-        const detections = data.predictions;
-        const brokenPillIndexes = getDamagedPills(
-          detections,
-          0.1
+        const normalColour = "#00FF00";
+        const brokenColour = "#FF0000";
+
+        adjustCanvas(
+          webcamRef,
+          canvasRef,
+          videoWidth,
+          videoHeight
         );
-        const normalColour = "#FF0000";
-        const brokenColour = "#00FF00";
 
-        const videoWidth =
-          webcamRef.current.video.videoWidth;
-        const videoHeight =
-          webcamRef.current.video.videoHeight;
-
-        webcamRef.current.video.width = videoWidth;
-        webcamRef.current.video.height = videoHeight;
-
-        adjustCanvas(canvasRef, videoWidth, videoHeight);
-
-        const ctx = canvasRef.current.getContext("2d");
-        if (detections)
-          drawBoxes(
-            canvasRef,
-            detections,
-            ctx,
-            normalColour,
-            brokenColour,
-            brokenPillIndexes
-          );
+        drawBoxes(
+          canvasRef,
+          detections,
+          normalColour,
+          brokenColour
+        );
       }
     }, 500);
     return () => {
