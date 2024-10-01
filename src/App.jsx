@@ -3,11 +3,7 @@ import Webcam from "react-webcam";
 // import useInference from "./hooks/useInference";
 import { cn } from "./lib/utils";
 
-import {
-  drawBoxes,
-  adjustCanvas,
-  getDamagedPills,
-} from "./lib/utils";
+import { drawBoxes, adjustCanvas } from "./lib/utils";
 
 import PillProgressCard from "./components/PillProgressCard";
 import AlertCard from "./components/AlertCard";

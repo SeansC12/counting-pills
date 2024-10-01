@@ -17,33 +17,6 @@ function calculateMedian(values) {
     : (values[half - 1] + values[half]) / 2;
 }
 
-export const getDamagedPills = (detections, error) => {
-  if (detections.length < 1) return [];
-  let totalArea = 0;
-  let areasOfPills = [];
-  let damagedIndexes = [];
-
-  detections.forEach((row) => {
-    const area = row.width * row.height;
-    totalArea += area;
-    areasOfPills.push(area);
-  });
-
-  const median = calculateMedian(areasOfPills);
-  const mean =
-    areasOfPills.reduce((acc, c) => acc + c, 0) /
-    areasOfPills.length;
-
-  detections.forEach((row, index) => {
-    const area = row.width * row.height;
-    if (area < median * (1 - error)) {
-      damagedIndexes.push(index);
-    }
-  });
-
-  return damagedIndexes;
-};
-
 export const adjustCanvas = (webcamRef, canvasRef) => {
   const videoWidth = webcamRef.current.video.videoWidth;
   const videoHeight = webcamRef.current.video.videoHeight;
