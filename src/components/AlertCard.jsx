@@ -40,7 +40,7 @@ export default function AlertCard({
     //   </CardContent>
     // </Card>
     <div>
-      {false ? (
+      {hasAlert ? (
         <ErrorAlert
           message={`${damagedPillCount} damaged pills detected.`}
         />

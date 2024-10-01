@@ -3,7 +3,11 @@ import Webcam from "react-webcam";
 // import useInference from "./hooks/useInference";
 import { cn } from "./lib/utils";
 
-import { drawBoxes, adjustCanvas } from "./lib/utils";
+import {
+  drawBoxes,
+  adjustCanvas,
+  handleDamagedPillState,
+} from "./lib/utils";
 
 import PillProgressCard from "./components/PillProgressCard";
 import AlertCard from "./components/AlertCard";
@@ -49,9 +53,13 @@ function App() {
         console.log(detections);
 
         setPillCount(detections ? detections.length : 0);
-        setDamagedPillCount(
-          detections.filter((d) => d.is_damaged).length
+
+        handleDamagedPillState(
+          setDamagedPillCount,
+          detections,
+          setHasAlert
         );
+
         if (!detections) return;
 
         const normalColour = "#00FF00";

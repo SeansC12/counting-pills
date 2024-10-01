@@ -17,6 +17,22 @@ function calculateMedian(values) {
     : (values[half - 1] + values[half]) / 2;
 }
 
+export function handleDamagedPillState(
+  setDamagedPillCount,
+  detections,
+  setAlert
+) {
+  const damagedPillCount = detections.filter(
+    (d) => d.is_damaged
+  ).length;
+  setDamagedPillCount(damagedPillCount);
+  if (damagedPillCount < 1) {
+    setAlert(false);
+  } else {
+    setAlert(true);
+  }
+}
+
 export const adjustCanvas = (webcamRef, canvasRef) => {
   const videoWidth = webcamRef.current.video.videoWidth;
   const videoHeight = webcamRef.current.video.videoHeight;
