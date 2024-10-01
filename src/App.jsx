@@ -52,7 +52,11 @@ function App() {
         const detections = await res.json();
         console.log(detections);
 
-        setPillCount(detections ? detections.length : 0);
+        setPillCount(
+          detections
+            ? detections.filter((d) => !d.is_damaged).length
+            : 0
+        );
 
         handleDamagedPillState(
           setDamagedPillCount,
