@@ -40,12 +40,6 @@ export default function PillProgressCard({
             isCorrectValue && "[&>div]:bg-green-500",
             isExceeded && "[&>div]:bg-red-500"
           )}
-          // className={cn(
-          //   "h-1.5",
-          //   isExceeded ? "bg-red-200" : "bg-secondary",
-          //   "[&>div]:bg-primary [&>div]:transition-all",
-          //   isExceeded && "[&>div]:bg-red-500"
-          // )}
         />
       </CardContent>
     </Card>
