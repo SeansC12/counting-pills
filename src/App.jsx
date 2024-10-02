@@ -50,6 +50,10 @@ function App() {
         });
 
         const detections = await res.json();
+        if (detections.statusCode !== 200) {
+          console.error(detections.error);
+          return;
+        }
         console.log(detections);
 
         setPillCount(
