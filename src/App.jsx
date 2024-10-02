@@ -24,7 +24,8 @@ function App() {
   const [pillCount, setPillCount] = useState(0);
   const [damagedPillCount, setDamagedPillCount] =
     useState(0);
-  const [totalPillCount, setTotalPillCount] = useState(40);
+  const [totalPillCount, setTotalPillCount] =
+    useState("40");
 
   const [hasAlert, setHasAlert] = useState(false);
 

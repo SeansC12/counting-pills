@@ -32,20 +32,27 @@ export default function PillCountChangeKeypad({
         </p>
       </div> */}
       <div className="grid grid-cols-3 gap-2">
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map(
-          (digit, index) => (
-            <Button
-              key={index}
-              variant="outline"
-              onClick={() =>
-                handleKeyPress(digit.toString())
-              }
-              className="text-lg font-semibold h-12"
-            >
-              {digit}
-            </Button>
-          )
-        )}
+        {[
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "0",
+        ].map((digit, index) => (
+          <Button
+            key={index}
+            variant="outline"
+            onClick={() => handleKeyPress(digit)}
+            className="text-lg font-semibold h-12"
+          >
+            {digit}
+          </Button>
+        ))}
         <Button
           variant="outline"
           onClick={handleErase}

@@ -9,12 +9,16 @@ export default function PillProgressCard({
   pillCount,
   totalPillCount,
 }) {
-  const isExceeded = pillCount > totalPillCount;
+  const totalPillCountInteger = parseInt(
+    totalPillCount,
+    10
+  );
+  const isExceeded = pillCount > totalPillCountInteger;
   const isCorrectValue =
-    pillCount.toString() === totalPillCount;
+    pillCount.toString() === totalPillCountInteger;
   const progressValue = isExceeded
     ? 100
-    : (pillCount / totalPillCount) * 100;
+    : (pillCount / totalPillCountInteger) * 100;
 
   return (
     <Card className="flex items-center grow">
