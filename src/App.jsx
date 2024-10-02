@@ -49,11 +49,13 @@ function App() {
           }),
         });
 
-        const detections = await res.json();
-        if (detections.statusCode !== 200) {
-          console.error(detections.error);
+        if (res.status !== 200) {
+          console.error(res.statusText);
           return;
         }
+
+        const detections = await res.json();
+
         console.log(detections);
 
         setPillCount(

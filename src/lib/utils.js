@@ -74,7 +74,11 @@ export const drawBoxes = (
     if (row.confidence < 0) return;
     let colourToUse;
     if (row.is_damaged) {
-      colourToUse = brokenColour;
+      if (row.damaged_signature === "Area too small.") {
+        colourToUse = "#0000FF";
+      } else {
+        colourToUse = brokenColour;
+      }
     } else {
       colourToUse = normalColour;
     }
