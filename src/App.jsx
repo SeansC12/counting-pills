@@ -26,7 +26,7 @@ function App() {
     useState(0);
   const [totalPillCount, setTotalPillCount] = useState(40);
 
-  const [hasAlert, setHasAlert] = useState(true);
+  const [hasAlert, setHasAlert] = useState(false);
 
   useEffect(() => {
     const fetchInterval = setInterval(async () => {
