@@ -12,7 +12,7 @@ import {
 import PillProgressCard from "./components/PillProgressCard";
 import AlertCard from "./components/AlertCard";
 import PillCountChangeKeypad from "./components/Keypad";
-// import PulsingBorder from "./components/PulsingBorder";
+import SettingsDialog from "./components/SettingsDialog";
 
 const WEBCAM_VIDEO_HEIGHT = 568;
 const WEBCAM_VIDEO_WIDTH = 568;
@@ -28,6 +28,8 @@ function App() {
     useState("40");
 
   const [hasAlert, setHasAlert] = useState(false);
+  const [isSettingsDialogOpen, setIsSettingsDialogOpen] =
+    useState(false);
 
   useEffect(() => {
     const fetchInterval = setInterval(async () => {
@@ -93,6 +95,10 @@ function App() {
 
   return (
     <div className="p-4 flex h-[600px] gap-4">
+      <SettingsDialog
+        isSettingsDialogOpen={isSettingsDialogOpen}
+        setIsSettingsDialogOpen={setIsSettingsDialogOpen}
+      />
       <div
         className={cn(
           "w-[" + WEBCAM_VIDEO_WIDTH + "px]",
@@ -126,6 +132,7 @@ function App() {
         <PillProgressCard
           pillCount={pillCount}
           totalPillCount={totalPillCount}
+          setIsSettingsDialogOpen={setIsSettingsDialogOpen}
         />
         <PillCountChangeKeypad
           totalPillCount={totalPillCount}
