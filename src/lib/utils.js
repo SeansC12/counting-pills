@@ -74,10 +74,16 @@ export const drawBoxes = (
     if (row.confidence < 0) return;
     let colourToUse;
     if (row.is_damaged) {
-      if (row.damaged_index === 1) {
-        colourToUse = "#0000FF";
-      } else {
-        colourToUse = brokenColour;
+      switch (row.damaged_index) {
+        case 0: // difference between trgoh and blob detection
+          colourToUse = brokenColour;
+          break;
+        case 1: // area
+          colourToUse = "#0000FF";
+          break;
+        case 2: // colour
+          colourToUse = "#FFFF00";
+          break;
       }
     } else {
       colourToUse = normalColour;
