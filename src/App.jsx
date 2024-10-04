@@ -41,7 +41,7 @@ function App() {
         const imageToSend =
           webcamRef.current.getScreenshot();
 
-        const res = await fetch("http://127.0.0.1:5001", {
+        const res = await fetch("http://localhost:5001", {
           method: "POST",
           headers: {
             Accept: "application/json",
@@ -87,7 +87,7 @@ function App() {
           brokenColour
         );
       }
-    }, 500);
+    }, 2000);
     return () => {
       clearInterval(fetchInterval);
     };
