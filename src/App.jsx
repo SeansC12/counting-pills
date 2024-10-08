@@ -41,7 +41,7 @@ function App() {
         const imageToSend =
           webcamRef.current.getScreenshot();
 
-        const res = await fetch("http://localhost:5005", {
+        const res = await fetch("http://localhost:5001", {
           method: "POST",
           headers: {
             Accept: "application/json",
